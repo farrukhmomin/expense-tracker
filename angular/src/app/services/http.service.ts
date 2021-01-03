@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { observable, Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IVendor } from '../common/interface';
 
 @Injectable({
     providedIn: 'root'
@@ -12,11 +11,16 @@ export class HttpService {
     constructor(protected http: HttpClient) { }
 
     get<T>(url: string): Observable<T> {
-        return this.http.get<T>(environment.apiURL + url);
+        return this.http.get<T>(environment.apiURL + url).pipe(
+            map((data) => {
+                localStorage.setItem(url, JSON.stringify(data));
+                return data;
+            })
+        );
     }
 
     post<T, K>(url: string, data: T): Observable<K> {
-        return this.http.post<K>(url, data)
+        return this.http.post<K>(environment.apiURL + url, data)
             .pipe(
                 catchError(this.handleError)
             );

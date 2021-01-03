@@ -1,0 +1,3 @@
+<div *ngFor="let member of members" [class]="'member ' + cssClassName">
+    <img class="member-icon" [src]="memberIconUrl + member.photo" alt="">{{member.name}}
+</div>

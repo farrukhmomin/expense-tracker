@@ -5,7 +5,7 @@ class BLLBase {
     DBConnection: any;
     constructor(DB: any) { this.DBConnection = DB; }
 
-    GetResultByQuery(sql: string, params: any, callback: (result: PResult) => any) {
+    GetResultByQuery(sql: string, params: any, callback: (result: any) => any) {
         var database = new DAL(this.DBConnection);
         var self = this;
 

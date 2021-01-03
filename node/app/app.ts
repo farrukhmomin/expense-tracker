@@ -11,7 +11,10 @@ var logger = require('morgan');
 var mysql = require('mysql');
 var myConnection = require('express-myconnection');
 var app = express();
+
 var session = require('express-session');
+app.use(session({ secret: 'GFT^*&IUGFT&R^*IUG', cookie: { maxAge: 60000 } }));
+
 var allowCrossDomain = function (req: { method: string; }, res: { header: (arg0: string, arg1: string) => void; send: (arg0: number) => void; }, next: () => void) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -32,7 +35,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ resave: true, saveUninitialized: true, secret: 'GFT^*&IUGFT&R^*IUG', cookie: { maxAge: 60000 } }));
 
 app.use(myConnection(mysql, config.mysql_params, 'single'));
 

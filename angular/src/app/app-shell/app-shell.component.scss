@@ -1,0 +1,41 @@
+@import '../common/css-variables.scss';
+
+.my-expense-tracker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.title-bar {
+  width: 100%;
+}
+
+.nav {
+  flex: 0 0 200px;
+}
+
+.router-outlet {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  flex: 1 1 auto;
+
+  border-left: solid 1px #ccc;
+  border-right: solid 1px #ccc;
+}
+
+.ads {
+  flex: 0 0 250px;
+  display: none;
+}
+
+.panel {
+  color: mat-color($primary, 900);
+  background: mat-color($primary, 100);
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.panel-body {
+  margin-bottom: 15px;
+}

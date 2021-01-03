@@ -8,13 +8,19 @@ class BLLExpenses extends BLLBase_1.default {
         super(DB);
     }
     getExpense(req, callback) {
-        let sql = `select * from expenses where user_id='${req.session.user_id}';`;
+        let sql = `select * from expenses where user_id=1 order by dated;`;
         this.GetResultByQuery(sql, undefined, (result) => {
             callback(result);
         });
     }
     getExpenseType(callback) {
         let sql = `select * from expense_type;`;
+        this.GetResultByQuery(sql, undefined, (result) => {
+            callback(result);
+        });
+    }
+    getIgnoreTags(callback) {
+        let sql = `select * from ignore_tags where user_id=1;`;
         this.GetResultByQuery(sql, undefined, (result) => {
             callback(result);
         });

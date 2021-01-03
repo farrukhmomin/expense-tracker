@@ -22,4 +22,13 @@ expenseRouter.get('/get-expense-type', function (req: any, res: any) {
     });
 });
 
+expenseRouter.get('/get-ignore-tags', function (req: any, res: any) {
+    req.getConnection(function (err: any, connection: any) {
+        const expense = new BLLExpenses(connection);
+        expense.getIgnoreTags((result: PResult) => {
+            res.send(result);
+        });
+    });
+});
+
 export = expenseRouter;

@@ -12,13 +12,4 @@ export class UserService extends HttpService {
     LoginUser(data: ILogin): Observable<IUser> {
         return this.post<ILogin, IUser>('user/login', data);
     }
-
-    GetMembers(): Observable<IMember> {
-        return this.get<IMember>('user/get-members');
-    }
-
-    GetIncome(): Observable<IIncome> {
-        return this.get<IIncome>('user/get-income');
-    }
-
 }

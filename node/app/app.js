@@ -16,6 +16,7 @@ var mysql = require('mysql');
 var myConnection = require('express-myconnection');
 var app = express();
 var session = require('express-session');
+app.use(session({ secret: 'GFT^*&IUGFT&R^*IUG', cookie: { maxAge: 60000 } }));
 var allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -34,7 +35,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ resave: true, saveUninitialized: true, secret: 'GFT^*&IUGFT&R^*IUG', cookie: { maxAge: 60000 } }));
 app.use(myConnection(mysql, config_1.default.mysql_params, 'single'));
 app.use('/vendor', vendorRouter);
 app.use('/user', userRouter);

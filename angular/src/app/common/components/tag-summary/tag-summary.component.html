@@ -1,0 +1,11 @@
+<div class="most-used-tags-list" *ngFor="let tag of tags; let i=index;">
+  <span class="icon">
+    <img [src]="iconUrl + getIcon(tag.tag)" alt="">
+  </span>
+  <span class="desc">
+    {{ tag.tag }}
+  </span>
+  <span class="total">
+    {{ tag.total | currency }}
+  </span>
+</div>

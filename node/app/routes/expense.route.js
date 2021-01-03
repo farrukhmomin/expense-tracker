@@ -21,5 +21,13 @@ expenseRouter.get('/get-expense-type', function (req, res) {
         });
     });
 });
+expenseRouter.get('/get-ignore-tags', function (req, res) {
+    req.getConnection(function (err, connection) {
+        const expense = new BLLExpenses_1.default(connection);
+        expense.getIgnoreTags((result) => {
+            res.send(result);
+        });
+    });
+});
 module.exports = expenseRouter;
 //# sourceMappingURL=expense.route.js.map

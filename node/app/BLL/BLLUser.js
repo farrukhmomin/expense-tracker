@@ -8,22 +8,24 @@ class BLLUser extends BLLBase_1.default {
         super(DB);
     }
     getUser(req, callback) {
-        let sql = `select * from users where username='${req.body.username}' and password='${req.body.password}';`;
+        let sql = `select * from users where username='${req.body.username}' and password='${req.body.password}'`;
         this.GetResultByQuery(sql, undefined, (result) => {
-            if (result.RowCount > 0) {
-                req.session.userId = result.Rows[0].id;
+            if (result[0].id) {
+                req.session.userId = result[0].id;
+                console.log(req);
             }
             callback(result);
         });
     }
     getMembers(req, callback) {
-        let sql = `select * from members where user_id=${req.session.user_id};`;
+        let sql = `select * from members where user_id=1`;
         this.GetResultByQuery(sql, undefined, (result) => {
             callback(result);
         });
     }
     getIncome(req, callback) {
-        let sql = `select * from members where user_id=${req.session.user_id};`;
+        let sql = `select * from income where user_id=1 order by dated`;
+        console.log(sql);
         this.GetResultByQuery(sql, undefined, (result) => {
             callback(result);
         });
