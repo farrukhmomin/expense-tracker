@@ -1,0 +1,149 @@
+@import '../../css-variables';
+
+.all-income {
+  .row {
+    padding: 0 5px;
+  }
+}
+
+.income-dated {
+  min-width: 60px;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  >div {
+    padding: 5px 10px;
+  }
+
+  .member-photo {
+    margin-right: 15px;
+  }
+}
+
+.row:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 5%;
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(110, 110, 110, 0.3), transparent, rgba(110, 110, 110, 0.3));
+}
+
+.col-amount {
+  font-size: 13px;
+  flex: 0 0 125px;
+  color: rgba(0, 0, 0, 0.54);
+  text-align: right;
+}
+
+.col-desc {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+
+  .member-photo {
+    margin-left: 10px;
+  }
+}
+
+.tags {
+  background-color: mat-color($warm, 400);
+}
+
+.icon-wrapper {
+  margin-right: 20px;
+  display: flex;
+
+  img {
+    max-height: 30px;
+    max-width: 35px;
+  }
+}
+
+.sub-heading {
+  background: mat-color($accent, 100);
+  padding: 5px 10px;
+  font-size: 14px;
+  font-variant: small-caps;
+}
+
+mat-expansion-panel-header {
+  border-bottom: solid 1px #ddd;
+  padding: 0 15px;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 15px 16px
+}
+
+.vendor-purchasing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+  width: 100%;
+}
+
+.brief-summary {
+  margin-left: 10px;
+  flex: 1 1 auto;
+
+  img {
+    max-height: 20px;
+    max-width: 20px;
+    margin-right: 2px;
+    opacity: .8;
+    vertical-align: middle;
+  }
+}
+
+.vendor-icon {
+  flex: 0 0 50px;
+
+  img {
+    max-width: 40px;
+    max-height: 40px;
+  }
+}
+
+.vendor-total {
+  flex: 0 0 120px;
+  text-align: right;
+}
+
+.vendor-name {
+  flex: 1 1 auto;
+  padding-right: 10px;
+}
+
+.mat-chip {
+  font-size: 12px;
+}
+
+.expenses-list {
+  padding: 5px 15px;
+
+  .col-amount {
+    font-size: 15px;
+    flex: 0 0 134px;
+    text-align: right;
+    padding-right: 23px;
+  }
+}
+
+.expenses-list:empty {
+  display: none;
+}
+
+.member-photo {
+  max-height: 30px;
+  max-width: 30px;
+  border-radius: 15px;
+}

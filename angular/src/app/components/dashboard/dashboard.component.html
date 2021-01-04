@@ -10,7 +10,7 @@
       <strong>
         total income
       </strong>
-      {{totalIncome | async | currency: 'CAD'}}
+      {{totalIncome$ | async | currency: 'CAD'}}
     </div>
     <div class="total-expense">
       <strong>
@@ -22,11 +22,9 @@
       <strong>
         total savings
       </strong>
-      $210.00
+      {{ (totalIncome - totalExpense) | currency: 'CAD' }}
     </div>
   </div>
-
-
 
   <div class="all-income">
     <div class="panel-heading">
@@ -34,21 +32,23 @@
         Income(Forecast)
       </span>
       <span class="col-2">
-        {{totalIncome | async | currency: 'CAD'}}
+        {{totalIncome$ | async | currency: 'CAD'}}
       </span>
     </div>
 
     <ng-container *ngFor="let income of income$ | async">
-      <div class="row">
+
+
+      <div class="row" [ngClass]="{'future-income':  (getDay(income.dated) | async) > currentDay }">
         <div class="vendor-icon" *ngIf="(getVendorById(income.vendor_id) | async) as vendor">
           <img [src]="iconUrl + (income.tagsArray[0].toLocaleLowerCase().replace(' ','-') +'.png' || 'money.png')">
         </div>
-        <div>
-          {{income.dated | date:'MMM d' }}
-        </div>
         <div class="col-desc">
+          <span class='income-dated'>
+            {{income.dated | date:'MMM d' }}
+          </span>
 
-          <ng-container *ngIf="(getMemberById(income.member_id) | async) as member">
+          <ng-container *ngFor="let member of getMemberById(income.member_id) | async">
             <img *ngIf="member.photo!==null" class="member-photo" [src]="memberPhotoUrl + member.photo" alt="">
           </ng-container>
 
@@ -65,6 +65,8 @@
           {{ income.amount| currency: 'CAD'}}
         </div>
       </div>
+
+
     </ng-container>
 
   </div>
@@ -81,97 +83,8 @@
       </span>
     </div>
 
-    <ng-container *ngIf="expensesByMonth | async">
-      <ng-container *ngFor="let expenseByDay of expenseGroups">
-
-        <div class="sub-heading">
-          {{ expenseByDay.dated | date:'longDate' }}
-        </div>
-
-        <ng-container *ngFor="let vendor of expenseByDay.vendors">
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-description>
-                <div class="vendor-purchasing">
-                  <span class="vendor-icon">
-                    <img [src]="iconUrl + (vendor.icon || 'store.png')" />
-                  </span>
-                  <span class="vendor-name">
-                    {{ vendor.name }}
-                  </span>
-
-                  <span class="vendor-total">
-                    {{ vendor.total | currency: 'CAD' }}
-                  </span>
-                </div>
-
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-
-            <div class="vendor-expenses-list">
-
-              <div class="row" *ngFor="let expense of vendor.purchasing">
-                <div class="col-desc">
-                  <mat-chip-list>
-                    <div class="icon">
-                    </div>
-
-                    <ng-container *ngFor="let tag of expense.tagsArray; let i=index;">
-                      <div *ngIf="i==0" class="icon-wrapper">
-                        <img [src]="iconUrl + (getIcon(tag) || 'money.png')">
-                      </div>
-
-                      <mat-chip color="primary">
-                        {{ tag }}
-                      </mat-chip>
-                    </ng-container>
-
-                  </mat-chip-list>
-                </div>
-
-                <div class="col-amount">
-                  {{expense.expense_total | currency: 'CAD'}}
-                </div>
-              </div>
-
-            </div>
-
-          </mat-expansion-panel>
-        </ng-container>
-
-        <div class="expenses-list">
-          <ng-container *ngFor="let expense of expenseByDay.expenses">
-
-            <div class="row" *ngIf="expense.vendor_id===null">
-              <div class="col-desc">
-                <mat-chip-list>
-                  <div class="icon">
-                  </div>
-
-                  <ng-container *ngFor="let tag of expense.tagsArray; let i=index;">
-                    <div *ngIf="i==0" class="icon-wrapper">
-                      <img [src]="iconUrl + (getIcon(tag) || 'buying.png')">
-                    </div>
-
-                    <mat-chip color="primary">
-                      {{ tag }}
-                    </mat-chip>
-                  </ng-container>
-
-                </mat-chip-list>
-              </div>
-
-              <div class="col-amount">
-                {{expense.expense_total | currency: 'CAD'}}
-              </div>
-            </div>
-
-          </ng-container>
-        </div>
-
-      </ng-container>
-    </ng-container>
+    <app-expense-group [expenses]="expensesByMonth | async" [expenseTypeIcons]="expenseType.expenseTypeIcons"
+      [currentMonth]="currentMonth"></app-expense-group>
 
   </div>
 

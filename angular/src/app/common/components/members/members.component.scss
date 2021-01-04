@@ -8,3 +8,11 @@
 .nav-panel {
   padding: 3px 10px;
 }
+
+.member {
+  cursor: pointer;
+}
+
+.member:hover {
+  background-color: #ddd;
+}

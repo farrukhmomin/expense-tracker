@@ -1,4 +1,4 @@
-@import '../common/css-variables.scss';
+@import '../common/css-variables';
 
 .my-expense-tracker {
   display: flex;
@@ -13,7 +13,7 @@
 }
 
 .nav {
-  flex: 0 0 200px;
+  flex: 0 0 250px;
 }
 
 .router-outlet {

@@ -1,0 +1,115 @@
+<div>
+  <ng-container *ngFor="let expenseByDay of expenseGroups">
+
+    <div class="sub-heading">
+      {{ expenseByDay.dated | date:'longDate' }}
+    </div>
+
+    <ng-container *ngFor="let vendor of expenseByDay.vendors">
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-description>
+            <div class="vendor-purchasing">
+              <span class="vendor-icon">
+                <img [src]="iconUrl + (vendor.icon || 'store.png')" />
+              </span>
+              <span class="vendor-name">
+                {{ vendor.name }}
+
+
+                <span class="brief-summary">
+                  <ng-container *ngFor="let expense of vendor.purchasing">
+                    <ng-container *ngFor="let tag of expense.tagsArray; let i=index;">
+                      <img *ngIf="i==0" [src]="iconUrl + (getIcon(tag) || 'money.png')">
+                    </ng-container>
+                  </ng-container>
+                </span>
+
+              </span>
+              <span class="vendor-total">
+                {{ vendor.total | currency: 'CAD' }}
+              </span>
+            </div>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="vendor-expenses-list">
+
+          <div class="row" *ngFor="let expense of vendor.purchasing">
+            <div class="col-desc">
+              <mat-chip-list>
+                <div class="icon">
+                </div>
+
+                <ng-container *ngFor="let tag of expense.tagsArray; let i=index;">
+                  <div *ngIf="i==0" class="icon-wrapper">
+                    <img [src]="iconUrl + (getIcon(tag) || 'money.png')">
+                  </div>
+
+                  <mat-chip color="primary">
+                    {{ tag }}
+                  </mat-chip>
+                </ng-container>
+
+              </mat-chip-list>
+
+              <ng-container *ngIf="expense.member_id !== null">
+                <ng-container *ngFor="let member of getMemberById(expense.member_id) | async">
+                  <img *ngIf="member.photo!==null" class="member-photo" [src]="memberPhotoUrl + member.photo" alt="">
+                </ng-container>
+              </ng-container>
+
+            </div>
+
+            <div class="col-amount">
+              {{expense.expense_total | currency: 'CAD'}}
+            </div>
+          </div>
+
+        </div>
+
+      </mat-expansion-panel>
+    </ng-container>
+
+    <div class="expenses-list">
+      <ng-container *ngFor="let expense of expenseByDay.expenses">
+
+        <div class="row" *ngIf="expense.vendor_id===null">
+          <div class="col-desc">
+            <mat-chip-list>
+              <div class="icon">
+              </div>
+
+              <ng-container *ngFor="let tag of expense.tagsArray; let i=index;">
+                <div *ngIf="i==0" class="icon-wrapper">
+                  <img [src]="iconUrl + (getIcon(tag) || 'buying.png')">
+                </div>
+
+                <mat-chip color="primary">
+                  {{ tag }}
+                </mat-chip>
+              </ng-container>
+
+            </mat-chip-list>
+
+
+            <ng-container *ngIf="expense.member_id !== null">
+              <ng-container *ngFor="let member of getMemberById(expense.member_id) | async">
+                <img *ngIf="member.photo!==null" class="member-photo" [src]="memberPhotoUrl + member.photo" alt="">
+              </ng-container>
+            </ng-container>
+
+          </div>
+
+          <div class="col-amount">
+            {{expense.expense_total | currency: 'CAD'}}
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+
+  </ng-container>
+</div>

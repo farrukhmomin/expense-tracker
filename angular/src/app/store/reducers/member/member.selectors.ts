@@ -8,8 +8,11 @@ const {
 } = MemberAdaptor.getSelectors();
 
 
+// select the array of users
+const allMembers = selectAll;
+
 export const selectMemberFromState = createFeatureSelector<IMemberEntityState>('members');
-export const getAllMember = createSelector(selectMemberFromState, selectAll);
+export const getAllMember = createSelector(selectMemberFromState, allMembers);
 
 export const getMemberById = createSelector(getAllMember,
-    (members: IMember[], props: { memberId: number }) => members.find(member => member.id === props.memberId));
+    (members: IMember[], props: { memberId: number }) => members.filter(member => member.id === props.memberId));

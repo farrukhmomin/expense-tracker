@@ -1,0 +1,24 @@
+<div class="dashboard">
+
+  <div class="title-bar">
+    <ng-container *ngIf="filterType == eFilterType.member">
+      <h2 *ngFor="let member of member$ | async">
+        <img class="icon member-photo" [src]="memberPhotoUrl + member?.photo" alt="">
+        {{ member?.name }}
+      </h2>
+    </ng-container>
+    <ng-container *ngIf="filterType == eFilterType.tag">
+      <h2>
+        <img class="icon" [src]="iconUrl + expenseTypeIcons[filterValue]" alt="">
+        {{ filterValue }}
+      </h2>
+    </ng-container>
+
+    <span class="total">
+      {{expenseTotal$| async | currency: 'CAD'}}
+    </span>
+  </div>
+
+</div>
+
+<app-expense-list [expenses]="expenses$|async" [expenseTypeIcons]="expenseTypeIcons"></app-expense-list>

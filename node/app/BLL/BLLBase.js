@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const dal_1 = __importDefault(require("../DAL/dal"));
 const enums_1 = require("../utilities/enums");
+const functions_1 = require("./../utilities/functions");
 class BLLBase {
     constructor(DB) { this.DBConnection = DB; }
     GetResultByQuery(sql, params, callback) {
@@ -11,7 +12,7 @@ class BLLBase {
         var self = this;
         database.GetResultByQuery(sql, params, function (err, result) {
             if (callback) {
-                callback(result);
+                callback(functions_1.transformObjectToArray(result));
             }
             return;
         });

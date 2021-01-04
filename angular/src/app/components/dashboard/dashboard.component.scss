@@ -1,11 +1,5 @@
 @import '../../common/css-variables.scss';
 
-.title-bar {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px;
-}
-
 .total-expense-income-so-far {
   border-top: solid 1px #ccc;
   border-bottom: solid 1px #ccc;
@@ -41,7 +35,19 @@
 
   .col-2 {
     flex: 0 0 120px;
+    text-align: right;
   }
+}
+
+
+.all-income {
+  .row {
+    padding: 0 5px;
+  }
+}
+
+.income-dated {
+  min-width: 60px;
 }
 
 .row {
@@ -70,6 +76,10 @@
   background-image: linear-gradient(to right, rgba(110, 110, 110, 0.3), transparent, rgba(110, 110, 110, 0.3));
 }
 
+.row.future-income {
+  opacity: .5;
+}
+
 
 .col-month {
   flex: 0 0 50px;
@@ -79,13 +89,19 @@
   font-size: 13px;
   flex: 0 0 125px;
   color: rgba(0, 0, 0, 0.54);
+  text-align: right;
 }
 
 .col-desc {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+
+  .member-photo {
+    margin-left: 10px;
+  }
 }
+
 
 .tags {
   background-color: mat-color($warm, 400);
@@ -93,38 +109,12 @@
 
 .icon-wrapper {
   margin-right: 20px;
+  display: flex;
 
   img {
     max-height: 30px;
     max-width: 35px;
   }
-}
-
-.all-expenses {
-
-  .sub-heading {
-    background: mat-color($accent, 100);
-    padding: 5px 10px;
-    font-size: 14px;
-    font-variant: small-caps;
-  }
-}
-
-mat-expansion-panel-header {
-  border-bottom: solid 1px #ddd;
-  padding: 0 15px;
-}
-
-.mat-expansion-panel-body {
-  padding: 0 15px 16px
-}
-
-.vendor-purchasing {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 40px;
-  width: 100%;
 }
 
 .vendor-icon {
@@ -138,27 +128,16 @@ mat-expansion-panel-header {
 
 .vendor-total {
   flex: 0 0 120px;
+  text-align: right;
 }
 
 .vendor-name {
   flex: 1 1 auto;
+  padding-right: 10px;
 }
 
 .mat-chip {
   font-size: 12px;
-}
-
-.expenses-list {
-  padding: 5px 15px;
-
-  .col-amount {
-    font-size: 15px;
-    flex: 0 0 134px;
-  }
-}
-
-.expenses-list:empty {
-  display: none;
 }
 
 .member-photo {

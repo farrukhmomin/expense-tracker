@@ -1,5 +1,6 @@
 import DAL from "../DAL/dal";
 import { PResult, Status } from "../utilities/enums";
+import { transformObjectToArray } from './../utilities/functions';
 
 class BLLBase {
     DBConnection: any;
@@ -11,7 +12,7 @@ class BLLBase {
 
         database.GetResultByQuery(sql, params, function (err, result) {
             if (callback) {
-                callback(result);
+                callback(transformObjectToArray(result));
             }
             return;
         });

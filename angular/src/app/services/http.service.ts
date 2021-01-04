@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+interface a {
+    column: any[];
+    data: any[]
+}
 
 @Injectable({
     providedIn: 'root'
@@ -10,14 +15,42 @@ import { environment } from 'src/environments/environment';
 export class HttpService {
     constructor(protected http: HttpClient) { }
 
+    private transformArrayToObj<T>(obj: a[]): Observable<T> {
+        var rows: any = [];
+
+        // empty row object 
+        var objData: any = {}
+        obj[0].column.map(col => objData[col] = '');
+
+        obj[0].data.forEach(rowData => {
+            const aa = { ...objData };
+            Object.keys(objData).forEach((key, index) => aa[key] = rowData[index]);
+            rows.push(aa);
+        });
+        return of(rows);
+    }
+
+    // get<T>(url: string): Observable<T> {
+    //     return this.http.get<T>(environment.apiURL + url).pipe(
+    //         map((data) => {
+    //             localStorage.setItem(url, JSON.stringify(data));
+    //             return data;
+    //         })
+    //     );
+    // }
+
+
     get<T>(url: string): Observable<T> {
-        return this.http.get<T>(environment.apiURL + url).pipe(
-            map((data) => {
-                localStorage.setItem(url, JSON.stringify(data));
-                return data;
-            })
+        return this.http.get<a[]>(environment.apiURL + url).pipe(
+            switchMap((data) => {
+                return this.transformArrayToObj<T>(data).pipe(map(data => { localStorage.setItem(url, JSON.stringify(data)); return data; }));
+            }),
+            catchError((error) => {
+                return of(JSON.parse(localStorage.getItem(url)) as T);
+            }),
         );
     }
+
 
     post<T, K>(url: string, data: T): Observable<K> {
         return this.http.post<K>(environment.apiURL + url, data)

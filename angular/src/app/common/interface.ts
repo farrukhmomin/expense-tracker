@@ -75,7 +75,7 @@ export interface IIncome {
     tags: string;
     tagsArray: string[];
     is_reoccurring: boolean;
-    dated: Date;
+    dated: string;
 }
 
 export interface IIgnoreTagsEntityState extends EntityState<IIgnoreTags> { }
@@ -97,4 +97,8 @@ export interface IExpenseGroup {
     dated: Date;
     expenses: IExpense[];
     vendors: IExpenseGroupVendors[];
+}
+
+export interface IIcon {
+    [key: string]: string
 }

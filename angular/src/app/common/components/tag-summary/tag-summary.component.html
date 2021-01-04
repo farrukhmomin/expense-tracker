@@ -1,4 +1,5 @@
-<div class="most-used-tags-list" *ngFor="let tag of tags; let i=index;">
+<div class="most-used-tags-list" *ngFor="let tag of tags; let i=index;"
+  (click)="emitTagClick(tag.tag, tag.expenses.length)" [ngClass]="{'anchor': tag.expenses.length>1}">
   <span class="icon">
     <img [src]="iconUrl + getIcon(tag.tag)" alt="">
   </span>
@@ -6,6 +7,9 @@
     {{ tag.tag }}
   </span>
   <span class="total">
+    <span class="total-items" *ngIf="tag.expenses.length>1">
+      {{ tag.expenses.length }}
+    </span>
     {{ tag.total | currency }}
   </span>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ExpenseService } from 'src/app/services/expense.service';
 import { environment } from 'src/environments/environment';
 import { IExpense, IIgnoreTags } from '../../interface';
@@ -17,6 +17,7 @@ interface ITags {
 })
 export class TagSummaryComponent implements OnChanges {
 
+  @Output() tagClick = new EventEmitter();
   @Input() expenses: IExpense[] = [];
   @Input() ignoreTags: IIgnoreTags[] = [];
   @Input() month: number = new Date().getMonth() + 1;
@@ -34,7 +35,7 @@ export class TagSummaryComponent implements OnChanges {
     this.expenses?.forEach(expense => {
       expense.tagsArray.forEach((t: string) => {
         const found = this.tags.find(i => i.tag === t);
-        const ignoreTagFound = this.ignoreTags.find(i => i.tag === t);
+        const ignoreTagFound = this.ignoreTags.find(i => t.indexOf(i.tag) >= 0);
 
         if (ignoreTagFound === undefined) {
 
@@ -57,10 +58,17 @@ export class TagSummaryComponent implements OnChanges {
 
     });
 
-    this.tags = this.tags.sort((a, b) => b.count - a.count);
+    this.tags = this.tags.sort((a, b) => b.total - a.total);
   }
 
   getIcon(desc: string): string {
     return this.expenseType.expenseTypeIcons[desc.toLowerCase()];
   }
+
+  emitTagClick(tag: string, totalExpenses: number) {
+    if (totalExpenses > 1) {
+      this.tagClick.emit(tag);
+    }
+  }
+
 }

@@ -11,18 +11,22 @@
 
   <div class="nav">
 
+    <a mat-flat-button [routerLink]="['/dashboard']">Dashboard</a>
+
     <div class="panel">
       MEMBERS
     </div>
     <div class="panel-body">
-      <app-members [cssClassName]="'nav-panel'" [members]="member$ | async"></app-members>
+      <app-members (memberClick)="redirectToFilterPage($event, 'member')" [cssClassName]="'nav-panel'"
+        [members]="member$ | async"></app-members>
     </div>
 
     <div class="panel">
       Expense Tags
     </div>
     <div class="panel-body" *ngIf="{ expenses: expenses$ | async, ignoreTags: ignoreTags$ | async } as data">
-      <app-tag-summary [expenses]="data.expenses" [ignoreTags]="data.ignoreTags"></app-tag-summary>
+      <app-tag-summary (tagClick)="redirectToFilterPage($event, 'tag')" [expenses]="data.expenses"
+        [ignoreTags]="data.ignoreTags"></app-tag-summary>
     </div>
 
 
@@ -31,7 +35,4 @@
   <div class="router-outlet">
     <router-outlet></router-outlet>
   </div>
-
-  <div class="ads">sdfs</div>
-
 </div>
