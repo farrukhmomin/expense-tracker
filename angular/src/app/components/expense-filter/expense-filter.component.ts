@@ -7,7 +7,7 @@ import { eFilterType } from "src/app/common/enum";
 import { IExpense, IIcon, IMember } from "src/app/common/interface";
 import { ExpenseService } from "src/app/services/expense.service";
 import { IStoreState } from "src/app/store/reducers";
-import { getExpenseForMonthFilterByCol } from "src/app/store/reducers/expense/expense.selectors";
+import { getExpenseForMonthFilterByCol, getExpenseTotalForMonthFilterByCol } from "src/app/store/reducers/expense/expense.selectors";
 import { getMemberById } from "src/app/store/reducers/member/member.selectors";
 import { environment } from "src/environments/environment";
 
@@ -33,7 +33,7 @@ export class ExpenseFilterComponent implements OnDestroy {
     expenseTypeIcons: IIcon;
     navigatorParams: any;
     params: Params;
-    expenseTotal$ = new BehaviorSubject(0);
+    expenseTotal$?: Observable<number>;
     isSet = false;
 
 
@@ -52,7 +52,7 @@ export class ExpenseFilterComponent implements OnDestroy {
         });
     }
     ngOnDestroy(): void {
-        this.expenseTotal$.unsubscribe();
+
     }
 
     loadData(): void {
@@ -74,22 +74,21 @@ export class ExpenseFilterComponent implements OnDestroy {
         switch (this.filterType) {
             case eFilterType.member:
                 this.member$ = this.store.select(getMemberById, { memberId: this.filterValue });
-                this.expenses$ = this.store.select(getExpenseForMonthFilterByCol, { month: this.month, column: 'member_id', columnValue: this.filterValue })
-                    .pipe(map(data => this.doTotal(data)));
+                this.expenses$ = this.store.select(getExpenseForMonthFilterByCol,
+                    { month: this.month, column: 'member_id', columnValue: this.filterValue });
+
+                this.expenseTotal$ = this.store.select(getExpenseTotalForMonthFilterByCol,
+                    { month: this.month, column: 'tags', columnValue: this.filterValue });
                 break;
             case eFilterType.tag:
-                this.expenses$ = this.store.select(getExpenseForMonthFilterByCol, { month: this.month, column: 'tags', columnValue: this.filterValue })
-                    .pipe(map(data => this.doTotal(data)));
+                this.expenses$ = this.store.select(getExpenseForMonthFilterByCol,
+                    { month: this.month, column: 'tags', columnValue: this.filterValue });
+
+                this.expenseTotal$ = this.store.select(getExpenseTotalForMonthFilterByCol,
+                    { month: this.month, column: 'tags', columnValue: this.filterValue });
                 break;
             default:
                 of(EMPTY);
         }
-    }
-
-    doTotal(data: IExpense[]): IExpense[] {
-        let total = 0;
-        data.map(expense => total += expense.expense_total);
-        this.expenseTotal$.next(total);
-        return data;
     }
 }

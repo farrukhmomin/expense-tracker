@@ -7,6 +7,7 @@ export const environment = {
   apiURL: 'http://localhost:3000/',
   memberIconUrl: 'https://www.baqircpa.com/_expense-tracker/assets/',
   iconsUrl: 'https://www.baqircpa.com/_expense-tracker/assets/images/',
+  getOfflineData: false
 };
 
 /*

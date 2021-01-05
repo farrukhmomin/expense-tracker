@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 
 interface a {
     column: any[];
-    data: any[]
+    data: any[];
 }
 
 @Injectable({
@@ -16,10 +16,9 @@ export class HttpService {
     constructor(protected http: HttpClient) { }
 
     private transformArrayToObj<T>(obj: a[]): Observable<T> {
-        var rows: any = [];
-
-        // empty row object 
-        var objData: any = {}
+        const rows: any = [];
+        // empty row object
+        const objData: any = {};
         obj[0].column.map(col => objData[col] = '');
 
         obj[0].data.forEach(rowData => {
@@ -40,11 +39,20 @@ export class HttpService {
     // }
 
 
-    get<T>(url: string): Observable<T> {
+    get<T>(url: string, getOfflineData = false): Observable<T> {
+
+        if (getOfflineData) {
+            return of(JSON.parse(localStorage.getItem(url)) as T);
+        }
+
         return this.http.get<a[]>(environment.apiURL + url).pipe(
-            switchMap((data) => {
-                return this.transformArrayToObj<T>(data).pipe(map(data => { localStorage.setItem(url, JSON.stringify(data)); return data; }));
-            }),
+            switchMap((data) =>
+                this.transformArrayToObj<T>(data).pipe(
+                    map(result => {
+                        localStorage.setItem(url, JSON.stringify(result));
+                        return result;
+                    }))
+            ),
             catchError((error) => {
                 return of(JSON.parse(localStorage.getItem(url)) as T);
             }),

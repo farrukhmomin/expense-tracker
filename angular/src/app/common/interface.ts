@@ -65,7 +65,7 @@ export interface IMember {
 
 export interface IIncomeEntityState extends EntityState<IIncome> { }
 export interface IIncome {
-    amount: string;
+    amount: number;
     vendor_id: number;
     vendor: IVendor;
     member_id: number;

@@ -10,6 +10,7 @@ import { VendorExpenseTypeActionTypes } from 'src/app/store/actions/vendor-expen
 import { VendorActionTypes } from 'src/app/store/actions/vendor.action';
 import { IStoreState } from 'src/app/store/reducers';
 import { getAllMember } from 'src/app/store/reducers/member/member.selectors';
+import { environment } from 'src/environments/environment';
 import { eFilterType } from '../common/enum';
 import { ExpenseActionTypes } from '../store/actions/expense.action';
 import { IgnoreTagsActionTypes } from '../store/actions/ignore-tags.action';
@@ -22,12 +23,22 @@ import { getAllIgnoreTags } from '../store/reducers/tags/ignore-tags.selector';
   templateUrl: './app-shell.component.html',
   styleUrls: ['./app-shell.component.scss']
 })
-export class AppShellComponent implements OnInit {
+export class AppShellComponent {
   member$?: Observable<IMember[]>;
   expenses$?: Observable<IExpense[]> | null;
   ignoreTags$?: Observable<IIgnoreTags[]>;
 
   constructor(private store: Store<IStoreState>, private router: Router) {
+    // load application with offline data
+    environment.getOfflineData = true;
+    this.getData();
+
+    // meanwhile get data from server
+    environment.getOfflineData = false;
+    this.getData();
+  }
+
+  getData(): void {
     this.store.dispatch({ type: VendorActionTypes.VENDOR_LIST_GET });
     this.store.dispatch({ type: ExpenseTypeActionTypes.EXPENSE_TYPE_LIST_GET });
     this.store.dispatch({ type: VendorExpenseTypeActionTypes.VENDOR_EXPENSE_TYPE_LIST_GET });
@@ -35,20 +46,20 @@ export class AppShellComponent implements OnInit {
     this.store.dispatch({ type: ExpenseActionTypes.EXPENSE_LIST_GET });
     this.store.dispatch({ type: MemberActionTypes.MEMBER_LIST_GET });
     this.store.dispatch({ type: IgnoreTagsActionTypes.IGNORE_TAG_LIST_GET });
-  }
-  ngOnInit(): void {
+
     this.member$ = this.store.select(getAllMember);
     this.expenses$ = this.store.select(getAllExpenseByMonth, { month: new Date().getMonth() + 1 });
     this.ignoreTags$ = this.store.select(getAllIgnoreTags);
   }
 
-
-  redirectToFilterPage(value: any, page: string) {
+  redirectToFilterPage(value: any, page: string): void {
     if (page === 'member') {
-      this.router.navigateByUrl('show/member/' + value, { state: { filterType: eFilterType.member, filterValue: value, month: new Date().getMonth() + 1 } });
+      this.router.navigateByUrl('show/member/' + value,
+        { state: { filterType: eFilterType.member, filterValue: value, month: new Date().getMonth() + 1 } });
     }
     else if (page === 'tag') {
-      this.router.navigateByUrl('show/tag/' + value, { state: { filterType: eFilterType.tag, filterValue: value, month: new Date().getMonth() + 1 } });
+      this.router.navigateByUrl('show/tag/' + value,
+        { state: { filterType: eFilterType.tag, filterValue: value, month: new Date().getMonth() + 1 } });
     }
   }
 

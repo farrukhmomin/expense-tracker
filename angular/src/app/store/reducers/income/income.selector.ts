@@ -14,8 +14,4 @@ export const getIncomeByMonth = createSelector(
     }));
 
 export const getIncomeTotalForCurrentMonth = createSelector(
-    getIncomeByMonth, (income: IIncome[]) => {
-        let total = 0;
-        income.forEach((i) => total += +i.amount);
-        return total;
-    });
+    getIncomeByMonth, (income: IIncome[]) => income.reduce((total, item) => total + (+item.amount), 0));

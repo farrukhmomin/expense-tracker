@@ -13,22 +13,22 @@ export class ExpenseService extends HttpService {
     expenseTypeIcons: IIcon = {};
 
     getExpenseTypes(): Observable<IExpenseType[]> {
-        return this.get<IExpenseType[]>('expense/get-expense-type').pipe(map(types => this.createKeyObject(types)));
+        return this.get<IExpenseType[]>('expense/get-expense-type', environment.getOfflineData)
+            .pipe(map(types => this.createKeyObject(types)));
     }
 
-    createKeyObject(types: IExpenseType[]): IExpenseType[] {
+    getExpenses(): Observable<IExpense[]> {
+        return this.get<IExpense[]>('expense/get-expenses', environment.getOfflineData);
+    }
+
+    getIgnoreTags(): Observable<IIgnoreTags[]> {
+        return this.get<IIgnoreTags[]>('expense/get-ignore-tags', environment.getOfflineData);
+    }
+
+    private createKeyObject(types: IExpenseType[]): IExpenseType[] {
         types.forEach(expType => {
             this.expenseTypeIcons[expType.name.toLowerCase()] = expType.icon_url;
         });
         return types;
     }
-
-    getExpenses(): Observable<IExpense[]> {
-        return this.get<IExpense[]>('expense/get-expenses');
-    }
-
-    getIgnoreTags(): Observable<IIgnoreTags[]> {
-        return this.get<IIgnoreTags[]>('expense/get-ignore-tags');
-    }
-
 }

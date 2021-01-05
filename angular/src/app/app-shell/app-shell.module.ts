@@ -10,17 +10,7 @@ const routes: Routes = [
   {
     path: '',
     component: AppShellComponent,
-    loadChildren: () => import('./../components/dashboard/dashboard.module').then(m => m.DashboardModule)
-  },
-  {
-    path: 'show',
-    component: AppShellComponent,
-    loadChildren: () => import('./../components/expense-filter/expense-filter.module').then(m => m.ExpenseFilterModule)
-  },
-  {
-    path: 'dashboard',
-    redirectTo: '',
-    pathMatch: 'full'
+    loadChildren: () => import('./../components/pages.modules').then(m => m.PagesModule)
   }
 ];
 

@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IStoreState } from 'src/app/store/reducers';
-import { getExpenseByForDay } from 'src/app/store/reducers/expense/expense.selectors';
+import { getExpenseByForDayInMonth } from 'src/app/store/reducers/expense/expense.selectors';
 import { getMemberById } from 'src/app/store/reducers/member/member.selectors';
 import { getVendorById } from 'src/app/store/reducers/vendor/vendor.selectors';
 import { environment } from 'src/environments/environment';
@@ -45,41 +45,43 @@ export class ExpenseGroupComponent implements OnChanges {
 
         this.expenseGroups.forEach((group: IExpenseGroup) => {
             // adding expenses by day into dated object [{dated: 30, expenses: [] }]
-            this.store.select(getExpenseByForDay, { day: new Date(group.dated).getDate(), month: this.currentMonth }).subscribe(data => {
-                group.expenses = data;
+            this.store.select(getExpenseByForDayInMonth, { day: new Date(group.dated).getDate(), month: this.currentMonth })
+                .subscribe(data => {
+                    group.expenses = data;
 
-                // populating unique vendors on that day
-                // i.e if you went walmart twice on same day, it will group in one array of expenses
-                const uniqueVendors: number[] = [...new Set(group.expenses.map((d: IExpense) => d.vendor_id))];
+                    // populating unique vendors on that day
+                    // i.e if you went walmart twice on same day, it will group in one array of expenses
+                    const uniqueVendors: number[] = [...new Set(group.expenses.map((d: IExpense) => d.vendor_id))];
 
-                uniqueVendors.forEach((Id) => {
+                    uniqueVendors.forEach((Id) => {
 
-                    // getting vendor details from from store
-                    this.store.select(getVendorById, { vendorId: +Id }).subscribe((v: IVendor | undefined) => {
+                        // getting vendor details from from store
+                        this.store.select(getVendorById, { vendorId: +Id }).subscribe((v: IVendor | undefined) => {
 
-                        // checking if vendor already added in array
-                        const gv = group.vendors.find((vg: any) => vg.id === v?.id);
+                            // checking if vendor already added in array
+                            const gv = group.vendors.find((vg: any) => vg.id === v?.id);
 
-                        if (!gv) {
-                            // push vendor details along with purchasing done for the vendor
+                            if (!gv) {
+                                // push vendor details along with purchasing done for the vendor
 
-                            const vendorExpenses = group.expenses.filter((expFromVendor: IExpense) => +expFromVendor.vendor_id === v?.id);
+                                const vendorExpenses = group.expenses.filter((expFromVendor: IExpense) =>
+                                    +expFromVendor.vendor_id === v?.id);
 
-                            if (vendorExpenses.length > 0) {
-                                const vendorData: IExpenseGroupVendors = {
-                                    id: v?.id,
-                                    name: v?.name,
-                                    icon: v?.icon,
-                                    total: vendorExpenses.reduce((total, item) => total + item.expense_total, 0),
-                                    purchasing: vendorExpenses
-                                };
-                                group.vendors.push(vendorData);
+                                if (vendorExpenses.length > 0) {
+                                    const vendorData: IExpenseGroupVendors = {
+                                        id: v?.id,
+                                        name: v?.name,
+                                        icon: v?.icon,
+                                        total: vendorExpenses.reduce((total, item) => total + item.expense_total, 0),
+                                        purchasing: vendorExpenses
+                                    };
+                                    group.vendors.push(vendorData);
+                                }
                             }
-                        }
-                    });
+                        });
 
+                    });
                 });
-            });
 
         });
     }

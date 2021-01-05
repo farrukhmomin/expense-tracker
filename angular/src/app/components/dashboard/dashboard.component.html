@@ -16,13 +16,13 @@
       <strong>
         total expense
       </strong>
-      {{totalExpense | currency: 'CAD'}}
+      {{totalExpense$ |async | currency: 'CAD'}}
     </div>
     <div class="total-savings">
       <strong>
         total savings
       </strong>
-      {{ (totalIncome - totalExpense) | currency: 'CAD' }}
+      {{ (totalIncome - (totalExpense$|async)) | currency: 'CAD' }}
     </div>
   </div>
 
@@ -79,7 +79,7 @@
         Expenses
       </span>
       <span class="col-2">
-        {{totalExpense | currency: 'CAD'}}
+        {{totalExpense$ | async | currency: 'CAD'}}
       </span>
     </div>
 

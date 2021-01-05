@@ -17,31 +17,42 @@ export const selectExpenseFromState = createFeatureSelector<IExpenseEntityState>
 export const getAllExpenses = createSelector(selectExpenseFromState, allExpenses);
 
 
-export const getAllExpenseByMonth = createSelector(getAllExpenses,
-    (expenses: IExpense[], props: { month: number }) => expenses.filter((e) => new Date(e.dated).getMonth() + 1 === props.month));
-
 export const getExpensesByMemberId = createSelector(allExpenses,
     (expenses: IExpense[], props: { memberId: number }) => expenses.find(expense => expense.member_id === props.memberId));
 
+
+
+// namespace: monthly filters
+export const getAllExpenseByMonth = createSelector(getAllExpenses,
+    (expenses: IExpense[], props: { month: number }) => expenses.filter((e) => new Date(e.dated).getMonth() + 1 === props.month));
+
+export const getAllExpenseTotalByMonth = createSelector(getAllExpenseByMonth,
+    (expenses: IExpense[], props: { month: number }) =>
+        expenses.reduce((total, expense) => total + expense.expense_total, 0)
+);
+
 export const getExpenseForMonthFilterByCol = createSelector(getAllExpenseByMonth,
-    (expenses: IExpense[], props: { month: number, column: keyof IExpense, columnValue: string }) => {
+    (expenses: IExpense[], props: { month: number, column: keyof IExpense, columnValue: string }) =>
+        expenses.filter(expense => getKeyValues<IExpense>(expense, props.column).indexOf(props.columnValue) >= 0));
 
-        const data = expenses.filter(expense => getKeyValues<IExpense>(expense, props.column).indexOf(props.columnValue) >= 0);
-        return data;
-    });
+export const getExpenseTotalForMonthFilterByCol = createSelector(getExpenseForMonthFilterByCol,
+    (expenses: IExpense[], props: { month: number, column: keyof IExpense, columnValue: string }) =>
+        expenses.reduce((total, expense) => total + expense.expense_total, 0)
+);
 
-
-export const getExpenseByVendorId = createSelector(getAllExpenseByMonth,
+export const getExpenseByVendorIdInMonth = createSelector(getAllExpenseByMonth,
     (expenses: IExpense[], props: { month: number, vendorId: number }) => expenses.filter(expense => expense.vendor_id === props.vendorId));
 
-export const getExpenseByVendorIdForDay = createSelector(getAllExpenseByMonth,
+export const getExpenseByVendorIdForDayInMonth = createSelector(getAllExpenseByMonth,
     (expenses: IExpense[], props: { month: number, vendorId: number, day: number }) =>
         expenses.filter(expense => new Date(expense.dated).getDate() === props.day));
 
-export const getExpenseByForDay = createSelector(getAllExpenseByMonth,
+export const getExpenseByForDayInMonth = createSelector(getAllExpenseByMonth,
     (expenses: IExpense[], props: { month: number, day: number }) =>
         expenses.filter(expense => new Date(expense.dated).getDate() === props.day));
 
 export const getExpenseForMonthByTag = createSelector(getAllExpenseByMonth,
     (expenses: IExpense[], props: { month: number, tag: string }) =>
         expenses.filter(expense => expense.tags.indexOf(props.tag) >= 0));
+
+// end monthly filters

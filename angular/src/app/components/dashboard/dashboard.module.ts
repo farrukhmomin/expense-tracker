@@ -11,7 +11,8 @@ import { CommonComponentsModule } from '../../common/components/common-component
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: DashboardComponent,
+    pathMatch: 'full'
   }
 ];
 

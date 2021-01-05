@@ -2,9 +2,7 @@ import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } fro
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IStoreState } from 'src/app/store/reducers';
-import { getExpenseByForDay } from 'src/app/store/reducers/expense/expense.selectors';
 import { getMemberById } from 'src/app/store/reducers/member/member.selectors';
-import { getVendorById } from 'src/app/store/reducers/vendor/vendor.selectors';
 import { environment } from 'src/environments/environment';
 import { IExpense, IExpenseGroup, IExpenseGroupVendors, IIcon, IMember, IVendor } from '../../interface';
 
